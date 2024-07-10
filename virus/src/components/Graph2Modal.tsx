@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useGraph } from "../contexts/GraphContext";
 
 interface IModelProps {
   hasSelectedInfection: boolean;
   setHasSelectedInfection: (value: boolean) => void;
+  setSelectedGraph: (value: string) => void;
 }
 
-export function Graph2Modal({ setHasSelectedInfection }: IModelProps) {
+export function Graph2Modal({
+  setHasSelectedInfection,
+  setSelectedGraph,
+}: IModelProps) {
   const {
     getGraphData,
     selectedAlgorithm,
@@ -44,7 +48,13 @@ export function Graph2Modal({ setHasSelectedInfection }: IModelProps) {
   }
 
   return (
-    <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2">
+    <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2 flex flex-col gap-4">
+      <button
+        onClick={() => setSelectedGraph("")}
+        className=" bg-stone-900 text-white p-2 rounded-lg hover:bg-white hover:text-stone-900 transition-colors font-semibold"
+      >
+        Voltar
+      </button>
       <h1 className="text-2xl font-semibold">
         Bem-Vindo(a) ao Grafo2 de Vírus
       </h1>

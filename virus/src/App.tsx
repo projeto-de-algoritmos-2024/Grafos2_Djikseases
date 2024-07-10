@@ -25,12 +25,14 @@ function App() {
             <Graph1Modal
               hasSelectedInfection={hasSelectedInfection}
               setHasSelectedInfection={setHasSelectedInfection}
+              setSelectedGraph={setSelectedGraph}
             />
           )
         ) : selectedGraph === "grafos2" ? (
           <Graph2Modal
             hasSelectedInfection={hasSelectedInfection}
             setHasSelectedInfection={setHasSelectedInfection}
+            setSelectedGraph={setSelectedGraph}
           />
         ) : null}
         <GraphMap hasSelectedInfection={hasSelectedInfection} />

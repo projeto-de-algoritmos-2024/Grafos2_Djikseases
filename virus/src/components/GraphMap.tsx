@@ -22,7 +22,6 @@ export function GraphMap({ hasSelectedInfection }: GraphMapProps) {
     showNames,
     triggerBFS,
     setTriggerBFS,
-    isRunning,
     setIsRunning,
   } = useGraph();
 
