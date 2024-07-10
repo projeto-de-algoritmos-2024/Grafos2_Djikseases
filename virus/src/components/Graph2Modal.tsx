@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useGraph } from '../contexts/GraphContext';
+import { useEffect, useState } from "react";
+import { useGraph } from "../contexts/GraphContext";
 
 interface IModelProps {
   hasSelectedInfection: boolean;
   setHasSelectedInfection: (value: boolean) => void;
 }
 
-export function Modal({ setHasSelectedInfection }: IModelProps) {
+export function Graph2Modal({ setHasSelectedInfection }: IModelProps) {
   const {
     getGraphData,
     selectedAlgorithm,
@@ -21,22 +21,22 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
 
   function handleClick() {
     if (components < 1) {
-      alert('Número de pessoas deve ser um inteiro maior que 0');
+      alert("Número de pessoas deve ser um inteiro maior que 0");
       return;
     }
 
     if (maxConnectionFactor < 1) {
-      alert('Fator de conexões máximas deve ser um inteiro maior que 0');
+      alert("Fator de conexões máximas deve ser um inteiro maior que 0");
       return;
     }
 
     if (maxConnectionFactor > components - 1) {
-      alert('Fator de conexões máximas deve ser menor que o número de pessoas');
+      alert("Fator de conexões máximas deve ser menor que o número de pessoas");
       return;
     }
 
     if (isolatedFactor < 0 || isolatedFactor > 1) {
-      alert('Fator de isolamento deve ser um número entre 0 e 1');
+      alert("Fator de isolamento deve ser um número entre 0 e 1");
       return;
     }
 
@@ -45,7 +45,9 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
 
   return (
     <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2">
-      <h1 className="text-2xl font-semibold">Bem-Vindo(a) ao Grafo de Vírus</h1>
+      <h1 className="text-2xl font-semibold">
+        Bem-Vindo(a) ao Grafo2 de Vírus
+      </h1>
       <p className="text-xs text-stone-400 mt-2">
         O quão longe um vírus pode se espalhar por um grupo de pessoas?
       </p>
@@ -57,21 +59,21 @@ export function Modal({ setHasSelectedInfection }: IModelProps) {
         <div className="flex gap-2 mt-2">
           <div
             className={
-              selectedAlgorithm === 'BFS'
-                ? 'text-xs font-bold px-2 bg-green-600 rounded cursor-pointer'
-                : 'text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer'
+              selectedAlgorithm === "BFS"
+                ? "text-xs font-bold px-2 bg-green-600 rounded cursor-pointer"
+                : "text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer"
             }
-            onClick={() => setSelectedAlgorithm('BFS')}
+            onClick={() => setSelectedAlgorithm("BFS")}
           >
             BFS
           </div>
           <div
             className={
-              selectedAlgorithm === 'DFS'
-                ? 'text-xs font-bold px-2 bg-green-600 rounded cursor-pointer'
-                : 'text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer'
+              selectedAlgorithm === "DFS"
+                ? "text-xs font-bold px-2 bg-green-600 rounded cursor-pointer"
+                : "text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer"
             }
-            onClick={() => setSelectedAlgorithm('DFS')}
+            onClick={() => setSelectedAlgorithm("DFS")}
           >
             DFS
           </div>
