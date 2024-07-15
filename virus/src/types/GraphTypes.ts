@@ -1,6 +1,7 @@
 export interface Link {
   source: number;
   target: number;
+  weightLabel: number;
 }
 
 export interface Pessoa {

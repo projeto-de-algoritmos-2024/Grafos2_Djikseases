@@ -1,27 +1,38 @@
+interface Node {
+  id: number;
+  distance: number;
+}
+
 class MinHeap {
+  private heap: Node[];
+
   constructor() {
     this.heap = [];
   }
 
-  insert(node) {
-    this.heap.push(node);
+  insert(node: Node, distance: number): void {
+    this.heap.push({ id: node.id, distance });
     this.bubbleUp(this.heap.length - 1);
   }
 
-  extractMin() {
+  extractMin(): Node | null {
     if (this.heap.length === 0) {
       return null;
     }
     const minNode = this.heap[0];
     const end = this.heap.pop();
-    if (this.heap.length > 0) {
+    if (this.heap.length > 0 && end) {
       this.heap[0] = end;
       this.bubbleDown(0);
     }
     return minNode;
   }
 
-  decreaseKey(node, newDistance) {
+  isEmpty(): boolean {
+    return this.heap.length === 0;
+  }
+
+  decreaseKey(node: Node, newDistance: number): void {
     const index = this.heap.findIndex((n) => n.id === node.id);
     if (index !== -1) {
       this.heap[index].distance = newDistance;
@@ -29,8 +40,8 @@ class MinHeap {
     }
   }
 
-  bubbleUp(index) {
-    const element = this.heap[index];
+  private bubbleUp(index: number): void {
+    let element = this.heap[index];
     while (index > 0) {
       const parentIndex = Math.floor((index - 1) / 2);
       const parent = this.heap[parentIndex];
@@ -41,18 +52,18 @@ class MinHeap {
     }
   }
 
-  bubbleDown(index) {
+  private bubbleDown(index: number): void {
     const length = this.heap.length;
-    const element = this.heap[index];
+    let element = this.heap[index];
     while (true) {
       let leftChildIndex = 2 * index + 1;
       let rightChildIndex = 2 * index + 2;
-      let leftChild, rightChild;
+      let leftChild: Node | undefined, rightChild: Node | undefined;
       let swap = null;
 
       if (leftChildIndex < length) {
         leftChild = this.heap[leftChildIndex];
-        if (leftChild.distance < element.distance) {
+        if (leftChild !== undefined && leftChild.distance < element.distance) {
           swap = leftChildIndex;
         }
       }
@@ -60,8 +71,8 @@ class MinHeap {
       if (rightChildIndex < length) {
         rightChild = this.heap[rightChildIndex];
         if (
-          (swap === null && rightChild.distance < element.distance) ||
-          (swap !== null && rightChild.distance < leftChild.distance)
+          (swap === null && rightChild?.distance < element.distance) ||
+          (swap !== null && rightChild !== undefined && leftChild !== undefined && rightChild.distance < leftChild.distance)
         ) {
           swap = rightChildIndex;
         }
@@ -74,3 +85,5 @@ class MinHeap {
     }
   }
 }
+
+export default MinHeap;
