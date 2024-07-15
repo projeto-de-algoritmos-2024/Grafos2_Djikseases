@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useGraph } from "../contexts/GraphContext";
+import { useEffect, useState } from 'react';
+import { getConnectedGraph } from '../utils/seed';
+import { useGraph2 } from '../contexts/GraphContext2';
 
 interface IModelProps {
   hasSelectedInfection: boolean;
@@ -13,44 +14,31 @@ export function Graph2Modal({
 }: IModelProps) {
   const {
     getGraphData,
-    selectedAlgorithm,
-    setSelectedAlgorithm,
-    showNames,
     setShowNames,
+    showNames,
     isRunning,
-  } = useGraph();
+    startingNode,
+    endingNode,
+  } = useGraph2();
   const [components, setComponents] = useState(20);
-  const [maxConnectionFactor, setMaxConnectionFactor] = useState(1);
-  const [isolatedFactor, setIsolatedFactor] = useState(0.5);
 
   function handleClick() {
     if (components < 1) {
-      alert("Número de pessoas deve ser um inteiro maior que 0");
+      alert('Número de pessoas deve ser um inteiro maior que 0');
       return;
     }
 
-    if (maxConnectionFactor < 1) {
-      alert("Fator de conexões máximas deve ser um inteiro maior que 0");
-      return;
-    }
-
-    if (maxConnectionFactor > components - 1) {
-      alert("Fator de conexões máximas deve ser menor que o número de pessoas");
-      return;
-    }
-
-    if (isolatedFactor < 0 || isolatedFactor > 1) {
-      alert("Fator de isolamento deve ser um número entre 0 e 1");
-      return;
-    }
-
-    getGraphData(components, maxConnectionFactor, isolatedFactor);
+    getGraphData(components);
   }
+
+  useEffect(() => {
+    getConnectedGraph(components);
+  }, []);
 
   return (
     <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2 flex flex-col gap-4">
       <button
-        onClick={() => setSelectedGraph("")}
+        onClick={() => setSelectedGraph('')}
         className=" bg-stone-900 text-white p-2 rounded-lg hover:bg-white hover:text-stone-900 transition-colors font-semibold"
       >
         Voltar
@@ -59,37 +47,15 @@ export function Graph2Modal({
         Bem-Vindo(a) ao Grafo2 de Vírus
       </h1>
       <p className="text-xs text-stone-400 mt-2">
-        O quão longe um vírus pode se espalhar por um grupo de pessoas?
+        Qual o caminho mais curto para que uma pessoa infecte outra de acordo
+        com o contato diário?
       </p>
-      <div className="p-2 bg-stone-700 mt-2 rounded">
-        <p className="text-xs text-stone-300">
-          Selecione um algoritmo e clique em qualquer pessoa para simular uma
-          infecção:
-        </p>
-        <div className="flex gap-2 mt-2">
-          <div
-            className={
-              selectedAlgorithm === "BFS"
-                ? "text-xs font-bold px-2 bg-green-600 rounded cursor-pointer"
-                : "text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer"
-            }
-            onClick={() => setSelectedAlgorithm("BFS")}
-          >
-            BFS
-          </div>
-          <div
-            className={
-              selectedAlgorithm === "DFS"
-                ? "text-xs font-bold px-2 bg-green-600 rounded cursor-pointer"
-                : "text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer"
-            }
-            onClick={() => setSelectedAlgorithm("DFS")}
-          >
-            DFS
-          </div>
-        </div>
-      </div>
-      <div className="mt-4 flex flex-col gap-2">
+      <p className="text-xs text-stone-400">
+        Os números nas arestas indicam quantas dias as pessoas envolvidas
+        tiveram contato num período de 1 mês
+      </p>
+
+      <div className="mt-2 flex flex-col gap-2">
         <div className="flex gap-2 mb-2">
           <input
             type="checkbox"
@@ -107,24 +73,6 @@ export function Graph2Modal({
           }}
           value={components}
         />
-        <h1>Fator de Conexões Máximas</h1>
-        <input
-          className="w-full p-2 rounded-lg bg-stone-700 focus:outline-none"
-          placeholder="Número máximo de conexões"
-          onChange={(e) => {
-            setMaxConnectionFactor(Number(e.target.value));
-          }}
-          value={maxConnectionFactor}
-        />
-        <h1>Fator de Isolamento</h1>
-        <input
-          className="w-full p-2 rounded-lg bg-stone-700 focus:outline-none"
-          placeholder="Probabilidade de isolamento"
-          onChange={(e) => {
-            setIsolatedFactor(e.target.value as any);
-          }}
-          value={isolatedFactor}
-        />
         <button
           className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold disabled:bg-stone-700 disabled:text-stone-900 disabled:cursor-not-allowed"
           onClick={handleClick}
@@ -132,12 +80,29 @@ export function Graph2Modal({
         >
           Gerar Grafo
         </button>
-        <p className="text-xs text-stone-300">
-          Ou, caso deseja infectar uma pessoa a partir de outra:
-        </p>
+
+        <div className="p-2 bg-stone-700 rounded mt-4">
+          <h1 className="">Clique na pessoa que começará a infecção</h1>
+          <input
+            type="text"
+            disabled
+            className="mt-2 rounded p-1 w-full"
+            value={startingNode?.name}
+          />
+        </div>
+        <div className="p-2 bg-stone-700 rounded mt-2">
+          <h1 className="">Clique na pessoa que deseja matar</h1>
+          <input
+            type="text"
+            disabled
+            className="mt-2 rounded p-1 w-full"
+            value={endingNode?.name}
+          />
+        </div>
+
         <button
-          className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold"
-          onClick={() => setHasSelectedInfection(true)}
+          className="bg-stone-900 text-white p-2 rounded-lg mt-4 hover:bg-white hover:text-stone-900 transition-colors font-semibold"
+          // onClick={}
         >
           Infectar
         </button>
