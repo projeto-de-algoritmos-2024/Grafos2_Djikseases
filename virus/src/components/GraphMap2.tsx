@@ -42,6 +42,95 @@ export function GraphMap2() {
     [pessoas, startingNode, endingNode]
   );
 
+  const updateGraph = (nodes: Pessoa[]) => {
+    const newNodes = [...nodes];
+
+    newNodes.forEach((n) => {
+      n.fx = n.x;
+      n.fy = n.y;
+      n.fz = n.z;
+    });
+
+    setPessoas((prevPessoas) => ({
+      ...prevPessoas,
+      nodes: newNodes,
+    }));
+  };
+
+  const heap = [];
+
+  function insertHeap(node: Pessoa) {
+    heap.push(node);
+    heap.sort((a, b) => a.distance - b.distance);
+  }
+
+  function extractMin() {
+    return heap.shift();
+  }
+
+  function decreaseKey(node: Pessoa, newDistance: number) {
+    const index = heap.indexOf(node);
+    heap[index].distance = newDistance;
+    heap.sort((a, b) => a.distance - b.distance);
+  }
+
+  const dijkstra = (startNodeId: number, endNodeId: number) => {
+    const newNodes = [...pessoas.nodes];
+    newNodes[startNodeId].isInfected = true;
+    updateGraph(newNodes);
+
+    const distances = new Map<number, number>();
+    const previousNodes = new Map<number, number | null>();
+
+    newNodes.forEach((node) => {
+      distances.set(node.id, Infinity);
+      previousNodes.set(node.id, null);
+
+      if (node.id !== startNodeId) {
+        node.isPath = false;
+      }
+    });
+
+    distances.set(startNodeId, 0);
+
+    while (distances.size != 0) {
+      const minDistance = Math.min(...distances.values());
+      const minDistanceNodeId = distances.keys().next().value;
+
+      distances.delete(minDistanceNodeId);
+
+      previousNodes.set(minDistanceNodeId, startNodeId);
+
+      const neighbors = newNodes.filter(
+        (node) => node.id !== minDistanceNodeId
+      );
+
+      neighbors.forEach((neighbor) => {
+        const distance = distances.get(neighbor.id);
+        if (distance === undefined || distance > minDistance + 1) {
+          distances.set(neighbor.id, minDistance + 1);
+        }
+      });
+    }
+
+    const path = new Array<number>();
+    let currentNodeId = endNodeId;
+    while (currentNodeId !== null) {
+      path.push(currentNodeId);
+      currentNodeId = previousNodes.get(currentNodeId);
+    }
+
+    setPessoas((prevPessoas) => ({
+      ...prevPessoas,
+      nodes: newNodes,
+      links: newNodes.map((node) => ({
+        source: node.id,
+        target: node.id,
+        weight: 1,
+      })),
+    }));
+  };
+
   useEffect(() => {
     setPessoas(graphData);
 
