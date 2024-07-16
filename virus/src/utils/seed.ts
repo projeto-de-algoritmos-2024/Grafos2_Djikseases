@@ -1,4 +1,4 @@
-import { Graph } from "../types/GraphTypes";
+import { Graph, Graph2 } from "../types/GraphTypes";
 
 const names = [
   "Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gustavo", "Helena",
@@ -7,7 +7,7 @@ const names = [
   "Yasmin", "Zacarias"
 ];
 
-export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolatedFactor = 0.5 } = {}): Graph {
+export function getRandomAdjacencyList({ N = 10, maxConnectionFactor = 1, isolatedFactor = 0.5 } = {}): Graph {
   const nodes = Array.from({ length: N }, (_, id) => ({
     id,
     name: names[Math.floor(Math.random() * names.length)],
@@ -28,8 +28,8 @@ export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolat
   }, {});
 
   Object.values(groups).forEach((group: any) => {
-    group.forEach(sourceId => {
-      const targetIds = group.filter(id => id !== sourceId);
+    group.forEach((sourceId: any) => {
+      const targetIds = group.filter((id: any) => id !== sourceId);
       const shuffleArray = (array: number[]) => {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -37,7 +37,7 @@ export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolat
         }
       };
       shuffleArray(targetIds);
-      targetIds.slice(0, maxConnectionFactor).forEach(targetId => {
+      targetIds.slice(0, maxConnectionFactor).forEach((targetId: any) => {
         const value = Math.round(Math.random() * 10);
         adjacencyList[sourceId].outgoing.push({ target: targetId, value });
         adjacencyList[targetId].incoming.push({ source: sourceId, value });
@@ -45,7 +45,7 @@ export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolat
     });
   });
 
-  const links = nodes.flatMap(node => adjacencyList[node.id].outgoing.map(link => ({
+  const links = nodes.flatMap(node => adjacencyList[node.id].outgoing.map((link: any) => ({
     source: node.id,
     target: link.target,
     value: link.value,
@@ -55,7 +55,7 @@ export function getRandomAdjacencyList({ N = 20, maxConnectionFactor = 1, isolat
   return { nodes, adjacencyList, links };
 }
 
-export function getConnectedGraph(N = 20): Graph {
+export function getConnectedGraph(N = 10): Graph2 {
   const nodes = Array.from({ length: N }, (_, id) => ({
     id,
     name: names[Math.floor(Math.random() * names.length)],
@@ -64,39 +64,41 @@ export function getConnectedGraph(N = 20): Graph {
     group: 0  // Todos os nós no mesmo grupo para garantir conexão
   }));
 
-  const adjacencyList = nodes.reduce((acc: any, node) => {
+  const connections = nodes.reduce((acc: any, node) => {
     acc[node.id] = { outgoing: [], incoming: [] };
     return acc;
   }, {});
 
-  // Garantir que o grafo seja conectado
-  for (let i = 0; i < N - 1; i++) {
-    const weight = Math.floor(Math.random() * 30) + 1;
-    const complementaryWeight = 31 - weight;
-    adjacencyList[i].outgoing.push({ target: i + 1, value: complementaryWeight });
-    adjacencyList[i + 1].incoming.push({ source: i, value: complementaryWeight });
-  }
-
-  // Adicionar conexões aleatórias extras para mais complexidade
+  // Adicionar conexões aleatórias para manter a conectividade parcial
   for (let i = 0; i < N; i++) {
-    const numConnections = Math.floor(Math.random() * 3);  // 1 a 3 conexões extras
+    const numConnections = Math.floor(Math.random() * 2); // 0 a 1 conexões extras
     for (let j = 0; j < numConnections; j++) {
       const target = Math.floor(Math.random() * N);
-      if (target !== i && !adjacencyList[i].outgoing.some((link: any) => link.target === target)) {
+      if (target !== i && !connections[i].outgoing.some((link: any) => link.target === target)) {
         const weight = Math.floor(Math.random() * 30) + 1;
         const complementaryWeight = 31 - weight;
-        adjacencyList[i].outgoing.push({ target, value: complementaryWeight });
-        adjacencyList[target].incoming.push({ source: i, value: complementaryWeight });
+        connections[i].outgoing.push({ target, value: complementaryWeight });
+        connections[target].incoming.push({ source: i, value: complementaryWeight });
       }
     }
   }
 
-  const links = nodes.flatMap(node => adjacencyList[node.id].outgoing.map(link => ({
+  // Adicionar uma conexão para garantir que todos os nós estejam conectados indiretamente
+  for (let i = 0; i < N - 1; i++) {
+    if (!connections[i].outgoing.some((link: any) => link.target === i + 1)) {
+      const weight = Math.floor(Math.random() * 30) + 1;
+      const complementaryWeight = 31 - weight;
+      connections[i].outgoing.push({ target: i + 1, value: complementaryWeight });
+      connections[i + 1].incoming.push({ source: i, value: complementaryWeight });
+    }
+  }
+
+  const links = nodes.flatMap(node => connections[node.id].outgoing.map((link: any) => ({
     source: node.id,
     target: link.target,
     value: 31 - link.value, // Valor complementar para algoritmo
-    weightLabel: link.value     // Valor original para label
+    weightLabel: link.value // Valor original para label
   })));
 
-  return { nodes, adjacencyList, links };
+  return { nodes, connections, links };
 }

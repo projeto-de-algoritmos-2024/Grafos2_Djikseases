@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useGraph } from "../contexts/GraphContext";
+import { useState } from 'react';
+import { useGraph } from '../contexts/GraphContext';
 
 interface IModelProps {
   hasSelectedInfection: boolean;
@@ -19,28 +19,28 @@ export function Graph1Modal({
     setShowNames,
     isRunning,
   } = useGraph();
-  const [components, setComponents] = useState(20);
+  const [components, setComponents] = useState(10);
   const [maxConnectionFactor, setMaxConnectionFactor] = useState(1);
   const [isolatedFactor, setIsolatedFactor] = useState(0.5);
 
   function handleClick() {
     if (components < 1) {
-      alert("Número de pessoas deve ser um inteiro maior que 0");
+      alert('Número de pessoas deve ser um inteiro maior que 0');
       return;
     }
 
     if (maxConnectionFactor < 1) {
-      alert("Fator de conexões máximas deve ser um inteiro maior que 0");
+      alert('Fator de conexões máximas deve ser um inteiro maior que 0');
       return;
     }
 
     if (maxConnectionFactor > components - 1) {
-      alert("Fator de conexões máximas deve ser menor que o número de pessoas");
+      alert('Fator de conexões máximas deve ser menor que o número de pessoas');
       return;
     }
 
     if (isolatedFactor < 0 || isolatedFactor > 1) {
-      alert("Fator de isolamento deve ser um número entre 0 e 1");
+      alert('Fator de isolamento deve ser um número entre 0 e 1');
       return;
     }
 
@@ -50,7 +50,7 @@ export function Graph1Modal({
   return (
     <div className="w-[250px] bg-stone-800 absolute top-4 left-4 z-[1000] rounded-lg p-4 text-white border-violet-900 border-2 flex flex-col gap-4">
       <button
-        onClick={() => setSelectedGraph("")}
+        onClick={() => setSelectedGraph('')}
         className=" bg-stone-900 text-white p-2 rounded-lg hover:bg-white hover:text-stone-900 transition-colors font-semibold"
       >
         Voltar
@@ -67,21 +67,21 @@ export function Graph1Modal({
         <div className="flex gap-2 mt-2">
           <div
             className={
-              selectedAlgorithm === "BFS"
-                ? "text-xs font-bold px-2 bg-green-600 rounded cursor-pointer"
-                : "text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer"
+              selectedAlgorithm === 'BFS'
+                ? 'text-xs font-bold px-2 bg-green-600 rounded cursor-pointer'
+                : 'text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer'
             }
-            onClick={() => setSelectedAlgorithm("BFS")}
+            onClick={() => setSelectedAlgorithm('BFS')}
           >
             BFS
           </div>
           <div
             className={
-              selectedAlgorithm === "DFS"
-                ? "text-xs font-bold px-2 bg-green-600 rounded cursor-pointer"
-                : "text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer"
+              selectedAlgorithm === 'DFS'
+                ? 'text-xs font-bold px-2 bg-green-600 rounded cursor-pointer'
+                : 'text-xs font-bold px-2 bg-stone-600 rounded cursor-pointer'
             }
-            onClick={() => setSelectedAlgorithm("DFS")}
+            onClick={() => setSelectedAlgorithm('DFS')}
           >
             DFS
           </div>

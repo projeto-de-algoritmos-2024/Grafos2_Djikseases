@@ -8,19 +8,18 @@ interface IModelProps {
   setSelectedGraph: (value: string) => void;
 }
 
-export function Graph2Modal({
-  setHasSelectedInfection,
-  setSelectedGraph,
-}: IModelProps) {
+export function Graph2Modal({ setSelectedGraph }: IModelProps) {
   const {
     getGraphData,
     setShowNames,
     showNames,
-    isRunning,
+    setStartingNode,
+    setEndingNode,
     startingNode,
     endingNode,
+    setTriggerDijkstra,
   } = useGraph2();
-  const [components, setComponents] = useState(20);
+  const [components, setComponents] = useState(10);
 
   function handleClick() {
     if (components < 1) {
@@ -28,6 +27,8 @@ export function Graph2Modal({
       return;
     }
 
+    setStartingNode(null);
+    setEndingNode(null);
     getGraphData(components);
   }
 
@@ -76,7 +77,6 @@ export function Graph2Modal({
         <button
           className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold disabled:bg-stone-700 disabled:text-stone-900 disabled:cursor-not-allowed"
           onClick={handleClick}
-          disabled={isRunning}
         >
           Gerar Grafo
         </button>
@@ -87,7 +87,7 @@ export function Graph2Modal({
             type="text"
             disabled
             className="mt-2 rounded p-1 w-full"
-            value={startingNode?.name}
+            value={startingNode?.name || ''}
           />
         </div>
         <div className="p-2 bg-stone-700 rounded mt-2">
@@ -96,13 +96,13 @@ export function Graph2Modal({
             type="text"
             disabled
             className="mt-2 rounded p-1 w-full"
-            value={endingNode?.name}
+            value={endingNode?.name || ''}
           />
         </div>
 
         <button
           className="bg-stone-900 text-white p-2 rounded-lg mt-4 hover:bg-white hover:text-stone-900 transition-colors font-semibold"
-          // onClick={}
+          onClick={() => setTriggerDijkstra(true)}
         >
           Infectar
         </button>
