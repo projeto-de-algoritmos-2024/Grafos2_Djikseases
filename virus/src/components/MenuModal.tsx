@@ -15,8 +15,18 @@ export function MenuModal({ setSelectedGraph }: IMenuModalProps) {
           Selecione qual conteudo deseja visualizar:
         </p>
         <div className="flex gap-2 mt-2">
-          <button onClick={() => setSelectedGraph("grafos1")}>Grafos 1</button>
-          <button onClick={() => setSelectedGraph("grafos2")}>Grafos 2</button>
+          <button
+            className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold"
+            onClick={() => setSelectedGraph('grafos1')}
+          >
+            Grafos 1
+          </button>
+          <button
+            className="bg-stone-900 text-white p-2 rounded-lg mt-2 hover:bg-white hover:text-stone-900 transition-colors font-semibold"
+            onClick={() => setSelectedGraph('grafos2')}
+          >
+            Grafos 2
+          </button>
         </div>
       </div>
     </div>
