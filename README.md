@@ -3,7 +3,6 @@
 **Número da Lista**: 2<br>
 **Conteúdo da Disciplina**: Grafos 2<br>
 
-
 ## Alunos
 
 | Matrícula  | Aluno                               |
@@ -13,13 +12,12 @@
 
 ## Sobre
 
-Esse projeto tem como objetivo fazer uma simulação do espalhamento de um vírus letal em uma população, onde cada iteração significa que houve contato entre duas pessoas
-que se conhecem, ou seja, possuem um edge entre si. Cada iteração funciona como se tivesse passado 1 dia, e essas duas pessoas tiveram contato nesse dia. Há 2 modos: um em que
-o usuário pode selecionar uma pessoa de início, e outro em que o usuário seleciona uma pessoa de início e uma pessoa alvo, para achar o menor caminho que o vírus precisa percorrer para atingir a pessoa alvo.
+Esse projeto tem como objetivo fazer uma simulação do espalhamento de um vírus letal em que uma pessoa contaminada infecta outra pessoa, até atingir uma pessoa alvo. A ideia é encontrar o menor caminho que o vírus precisa percorrer para atingir a pessoa alvo, sendo que os pesos das arestas do grafo significam quantas dias as pessoas envolvidas tiveram contato num período de 1 mês. Para fazer isso, foi utilizado o algoritmo de Dijkstra, que é um algoritmo de busca que encontra o caminho mais curto entre dois vértices.
 
 ## Screenshots
 
-
+![imagem4](/screenshots/4.png)
+![imagem5](/screenshots/5.png)
 
 ## Instalação
 
